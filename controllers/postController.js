@@ -2,7 +2,7 @@ import connection from "../connection.js";
 import CustomError from "../classes/CustomError.js";
 
 function index(req, res) {
-    const sql = "SELECT * FROM `posts`";
+    const sql = "SELECT * FROM posts";
     connection.query(sql, (err, results) => {
         if (err) {
             return res.status(500).json({ error: "Database query failed" });
@@ -30,7 +30,7 @@ function show(req, res) {
         return res.status(400).json({ error: "ID non valido" });
     }
 
-    const sql = "SELECT * FROM `posts` WHERE `id` = ?";
+    const sql = "SELECT * FROM posts WHERE id = ?";
     connection.query(sql, [id], (err, results) => {
         if (err) {
             return res.status(500).json({ error: "Errore nella query del database" });
@@ -45,7 +45,6 @@ function show(req, res) {
         res.json({ success: true, item });
     });
 }
-
 
 function store(req, res) {
     let newId = 0;
@@ -79,9 +78,9 @@ function update(req, res) {
 
 function destroy(req, res) {
     const id = parseInt(req.params.id);
-    const sql = "DELETE FROM `posts` WHERE `id` = ?";
+    const sql = "DELETE FROM posts WHERE id = ?";
 
-    connection.query(sql, [id], (err, res) => {
+    connection.query(sql, [id], (err) => {
         if (err) {
             return res.status(500).json({ error: "Errore nella query di eliminazione" });
         }
