@@ -25,6 +25,11 @@ function show(req, res) {
     console.log("Richiesta ricevuta per ID:", req.params.id);
     const id = parseInt(req.params.id);
 
+    // Controllo ID valido
+    if (isNaN(id)) {
+        return res.status(400).json({ error: "ID non valido" });
+    }
+
     const sql = "SELECT * FROM `posts` WHERE `id` = ?";
     connection.query(sql, [id], (err, results) => {
         if (err) {
@@ -36,15 +41,8 @@ function show(req, res) {
             return res.status(404).json({ error: "Post non trovato" });
         }
 
-        const sqlTags = `SELECT tags.id, tags.name FROM tags JOIN tag_post ON tag_post.post_tag_id = tags.id WHERE tag_post.post_id = ?`;
-        connection.query(sqlTags, [id], (err, tagResults) => {
-            if (err) {
-                return res.status(500).json({ error: "Errore nella query dei tag" });
-            }
-            // aggiungo la proprietà tags all oggetto post
-            item.tags = tagResults;
-            res.json({ success: true, item });
-        });
+        // Risposta con il post trovato
+        res.json({ success: true, item });
     });
 }
 
